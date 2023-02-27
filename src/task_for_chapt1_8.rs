@@ -28,16 +28,21 @@ pub fn task_for_chapt1_8() {
     let mut _f:i32=0;
     let mut arr: Vec<i32> = Vec::new();
 
-    if num < 1
+    if num < 2
     {
         print!("Простых чисел нет!!");
         return;
     }
     
-    print!("1, 2, ");
-    let mut i =3;
+    let mut i =2;
     while i<num
     {
+        if i<3
+        {
+            print!("{i}, ");
+            i+=1;
+            continue;
+        }
         if isPrime(i, &arr)
         {
             if isPrime(i+2, &arr)
