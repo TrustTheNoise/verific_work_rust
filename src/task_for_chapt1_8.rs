@@ -18,6 +18,7 @@ fn isPrime(i: i32, arr: &Vec<i32>) -> bool
 }
 
 pub fn task_for_chapt1_8() {
+    
     println!("Напишите число до которого хотите просмотреть простые числа:");
     let mut num = String::new();
     io::stdin()
