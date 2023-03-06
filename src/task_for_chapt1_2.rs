@@ -5,7 +5,6 @@ use std::cmp::Ordering;
 pub fn task_for_chapt1_2() {
     let secret_number: u32 = rand::thread_rng().gen_range(1..=100);
     let mut num_of_tries = 0;
-    let _pohui: i32 = -5;
     loop{
         println!("\n\nВведите число: ");
         let mut guess = String:: new();
@@ -16,7 +15,7 @@ pub fn task_for_chapt1_2() {
 
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
-            Err(_) => continue, 
+            Err(_) => {println!("Вводите целое число!!"); continue;}, 
         };
 
         num_of_tries += 1;

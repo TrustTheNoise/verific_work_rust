@@ -1,7 +1,11 @@
+
+#![allow(unused_assignments)]
 use std::io;
 use colored::*;
 
-fn isPrime(i: i32, arr: &Vec<i32>) -> bool
+
+
+fn is_prime(i: i32, arr: &Vec<i32>) -> bool
 {
     for n in arr
     {
@@ -20,12 +24,20 @@ fn isPrime(i: i32, arr: &Vec<i32>) -> bool
 pub fn task_for_chapt1_8() {
     
     println!("Напишите число до которого хотите просмотреть простые числа:");
-    let mut num = String::new();
-    io::stdin()
-    .read_line(&mut num)
-    .expect("Траблы с башкой...");
-    let num: i32 = num.trim().parse().expect("Вводи целое число!!");
-    let mut _f:i32=0;
+    let mut num_string = String::new();
+    let mut num: i32 = 0;
+    loop
+    {
+        io::stdin()
+        .read_line(&mut num_string)
+        .expect("Траблы с башкой...");
+        num = match num_string.trim().parse()
+        {
+            Ok(num) => num,
+            Err(_) => {println!("Вводите целое число!!"); continue;},
+        };
+        break;
+    }
     let mut arr: Vec<i32> = Vec::new();
 
     if num < 2
@@ -43,9 +55,9 @@ pub fn task_for_chapt1_8() {
             i+=1;
             continue;
         }
-        if isPrime(i, &arr)
+        if is_prime(i, &arr)
         {
-            if isPrime(i+2, &arr)
+            if is_prime(i+2, &arr)
             {
                 arr.push(i);
                 arr.push(i+2);

@@ -1,5 +1,6 @@
-use std::io;
+#![allow(unused_assignments)]
 
+use std::io;
 
 pub fn task_for_chapt3_4() {
     println!("Введите входное напряжение: ");
@@ -22,11 +23,11 @@ pub fn task_for_chapt3_4() {
         return;
     }
 
-    all_res_accurate(u_in, u_out);
+    all_res_view(u_in, u_out);
 
 }
 
-fn all_res_accurate_bigger(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32), (u32, u32))
+fn all_res_bigger(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32), (u32, u32))
 {
     let mut min = (0, 0);
     let mut max: (u32, u32) = (0,0);
@@ -34,7 +35,7 @@ fn all_res_accurate_bigger(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32
     let mut max_u: f32 = 1000000.0;
     let mut vect:Vec<(u32, u32)> = Vec::new();
     
-    let arr_of_res = Vec:: from(
+    let mut arr_of_res = Vec:: from(
         [100.0, 102.0, 105.0, 107.0, 110.0, 113.0,
          115.0, 118.0, 121.0, 124.0, 127.0, 130.0,
          133.0, 137.0, 140.0, 143.0, 147.0, 150.0,
@@ -52,6 +53,10 @@ fn all_res_accurate_bigger(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32
          750.0, 768.0, 787.0, 806.0, 825.0, 845.0,
          866.0, 887.0, 909.0, 931.0, 953.0, 976.0]);
     
+    for i in arr_of_res.len()..(arr_of_res.len()*2) {
+        arr_of_res.push(arr_of_res[i-96] * 10.0);
+    }
+
     let mut low:usize = 0;
     while low < arr_of_res.len()
     {
@@ -72,6 +77,7 @@ fn all_res_accurate_bigger(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32
 
             if this_cycle < u_out
             {
+
                 low1 = mid + 1;
                 if this_cycle < u_out && this_cycle>min_u 
                 {
@@ -100,14 +106,14 @@ fn all_res_accurate_bigger(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32
 
 
 
-fn all_res_accurate_less(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32), (u32, u32))
+fn all_res_less(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32), (u32, u32))
 {
     let mut min = (0, 0);
     let mut max: (u32, u32) = (0,0);
     let mut min_u: f32 = 0.0;
     let mut max_u: f32 = 1000000.0;
     let mut vect:Vec<(u32, u32)> = Vec::new();
-    let arr_of_res = Vec:: from(
+    let mut arr_of_res = Vec:: from(
        [100.0, 102.0, 105.0, 107.0, 110.0, 113.0,
         115.0, 118.0, 121.0, 124.0, 127.0, 130.0,
         133.0, 137.0, 140.0, 143.0, 147.0, 150.0,
@@ -124,9 +130,12 @@ fn all_res_accurate_less(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32),
         649.0, 665.0, 681.0, 698.0, 715.0, 732.0,
         750.0, 768.0, 787.0, 806.0, 825.0, 845.0,
         866.0, 887.0, 909.0, 931.0, 953.0, 976.0]);
+    
+    for i in arr_of_res.len()..(arr_of_res.len()*2) {
+        arr_of_res.push(arr_of_res[i-96] * 10.0);
+    }
 
     let mut low:usize = 0;
-    
     while low < arr_of_res.len()
     {
         if (u_in * arr_of_res[low] / (arr_of_res[low] + arr_of_res[arr_of_res.len()-1])) > u_out 
@@ -176,76 +185,72 @@ fn all_res_accurate_less(u_in: f32, u_out: f32) -> (Vec<(u32, u32)>, (u32, u32),
     (vect, min, max)
 }
 
-fn all_res_accurate(u_in: f32, u_out: f32)
+fn all_res_view(u_in: f32, u_out: f32)
 {
-    let mut _vect_par: Vec<(u32, u32)> =Vec::new();
-    let mut _min:(u32, u32) = (0,0);
-    let mut _max:(u32, u32) = (0,0);
+    let mut vect_par: Vec<(u32, u32)> =Vec::new();
+    let mut min:(u32, u32) = (0,0);
+    let mut max:(u32, u32) = (0,0);
     if u_out < (u_in/2.) 
     {
-        (_vect_par, _min, _max) = all_res_accurate_less(u_in, u_out);
-        
-        println!("Точные значения: {:?}", _vect_par);
-
-        let u_min = u_in * _min.0 as f32 / (_min.0 as f32 + _min.1 as f32);
-        let abs_mist_min = u_min-u_out;
-        let rel_mist_min = (1.-u_out/u_min)* 100.;
-
-        let u_max = u_in * _max.0 as f32 / (_max.0 as f32 + _max.1 as f32);
-        let abs_mist_max = u_max-u_out;
-        let rel_mist_max = (1. - u_out/u_max)* 100.;
-
-    println!("Приближенные значения:\n
-    Большее соотношение:\n\n
-    Входящее напряжение: {u_in}\n
-    R1: {}\n
-    R2: {}\n
-    ---------------------------------\n
-    Выходное напряжение: {u_min}\n
-    Абсолютная разница: {abs_mist_min} V\n
-    Относительная разница: {rel_mist_min} %", _min.0, _min.1);
-
-    println!("\n\nМеньшее соотношение:\n\n
-    Входящее напряжение: {u_in}\n
-    R1: {}\n
-    R2: {}\n
-    ---------------------------------\n
-    Выходное напряжение: {u_max}\n
-    Абсолютная разница: {abs_mist_max} V\n
-    Относительная разница: {rel_mist_max} %", _max.0, _max.1);
-
-    }else
-    {
-        (_vect_par, _min, _max) = all_res_accurate_bigger(u_in, u_out);
-        
-        println!("Точные значения: {:?}", _vect_par);
-
-        let u_min = u_in * _min.1 as f32 / (_min.0 as f32 + _min.1 as f32);
-        let abs_mist_min = u_min-u_out;
-        let rel_mist_min = (1.-u_out/u_min)* 100.;
-
-        let u_max = u_in * _max.1 as f32 / (_max.0 as f32 + _max.1 as f32);
-        let abs_mist_max = u_max-u_out;
-        let rel_mist_max = (1. - u_out/u_max)* 100.;
-
-    println!("Приближенные значения:\n
-    Большее соотношение:\n\n
-    Входящее напряжение: {u_in}\n
-    R1: {}\n
-    R2: {}\n
-    ---------------------------------\n
-    Выходное напряжение: {u_min}\n
-    Абсолютная разница: {abs_mist_min} V\n
-    Относительная разница: {rel_mist_min} %", _min.0, _min.1);
-
-    println!("\n\nМеньшее соотношение:\n\n
-    Входящее напряжение: {u_in}\n
-    R1: {}\n
-    R2: {}\n
-    ---------------------------------\n
-    Выходное напряжение: {u_max}\n
-    Абсолютная разница: {abs_mist_max} V\n
-    Относительная разница: {rel_mist_max} %", _max.0, _max.1);
+        (vect_par, min, max) = all_res_less(u_in, u_out);
+        if vect_par.is_empty()
+        {
+            output_results_approx(u_in, u_out, min, max);
+        }else{
+            println!("Точные значения: {:?}", vect_par);
+            output_results_approx(u_in, u_out, min, max);
+        }
+    }else{
+        (vect_par, min, max) = all_res_bigger(u_in, u_out);
+        if vect_par.is_empty()
+        {
+            output_results_approx(u_in, u_out, min, max);
+        }else{
+            println!("Точные значения: {:?}", vect_par);
+            output_results_approx(u_in, u_out, min, max);
+        }
     }
 
+}
+
+fn output_results_approx(u_in: f32, u_out: f32, min: (u32, u32), max: (u32, u32))
+{
+    let mut u_approx: f32 = 0.0;
+    if min.0<min.1
+    {
+        u_approx = u_in * min.0 as f32 / (min.0 as f32 + min.1 as f32);
+    }else
+    {
+        u_approx = u_in * min.1 as f32 / (min.0 as f32 + min.1 as f32);
+    }
+    let absolute_mist = u_approx-u_out;
+    let relative_mist = (1.-u_out/u_approx)* 100.;
+
+        println!("Приближенные значения:\n
+    Большее соотношение:
+    Входящее напряжение: {u_in}
+    R1: {}       R2: {}
+    ---------------------------------
+    Выходное напряжение: {u_approx}
+    Абсолютная разница: {absolute_mist} V
+    Относительная разница: {relative_mist} %", min.0, min.1);
+
+    if max.0<max.1
+    {
+        u_approx = u_in * max.0 as f32 / (max.0 as f32 + max.1 as f32);
+    }else
+    {
+        u_approx = u_in * max.1 as f32 / (max.0 as f32 + max.1 as f32);
+    }
+    let absolute_mist = u_approx-u_out;
+    let relative_mist = (1.-u_out/u_approx)* 100.;
+
+        println!("Меньшее соотношение:
+    Входящее напряжение: {u_in}
+    R1: {}
+    R2: {}
+    ---------------------------------
+    Выходное напряжение: {u_approx}
+    Абсолютная разница: {absolute_mist} V
+    Относительная разница: {relative_mist} %", max.0, max.1);
 }

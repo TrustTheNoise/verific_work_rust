@@ -12,36 +12,28 @@ pub fn task8_2() {
 
 fn pig_latin(latin: &mut String) -> String
 {
-    let mut i = 0;
-    let mut prev_i = 0;
     let mut pig_latin = String::new();
-    for b in latin.chars()
+    let arr_of_let = ['a', 'e', 'y', 'u', 'i', 'o', 'A', 'E', 'Y', 'U', 'I', 'O'];
+
+    for word in latin.split_whitespace()
     {
-        if b==' ' || b =='\r'
+        let ch = match word.to_string().chars().nth(0)  {
+            Some(char) => char,
+            None => {println!("Слов нет!");
+            break;},
+        };
+        if arr_of_let.contains(&ch)
         {
-            let str_start = &latin.clone()[prev_i..i];
-            let mut str_fin = String::from(str_start);
-            //let str_in_start = &latin[prev_i..i];
-            prev_i=i+1;
-            for ch in str_fin.chars() 
-            {
-                if ch == 'a' || ch == 'e' || ch=='y' || ch=='u' || ch == 'i' || ch == 'o'
-            {
-                str_fin.push_str("-hay")
-            }else
-            {
-                str_fin.remove(0);
-                str_fin.push('-');
-                str_fin.push(ch);
-                str_fin.push_str("ay");
-            }
-            //let bruh = &latin.replace(str_start, &str_fin);
-            pig_latin.push_str(&str_fin);
-            pig_latin.push(' ');
-            break;
-            }
+            pig_latin = pig_latin + word + "-hay ";
+        }else{
+            let mut word_string = word.to_string();
+            word_string.remove(0);
+            word_string.push('-');
+            word_string.push(ch);
+            word_string.push_str("ay ");
+            pig_latin = pig_latin + &word_string[0..];
         }
-        i+=1;
+
     }
     return pig_latin;
 }

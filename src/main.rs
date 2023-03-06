@@ -1,4 +1,3 @@
-#![allow(non_snake_case)]
 use std::io;
 
 mod task_for_chapt1_2;
